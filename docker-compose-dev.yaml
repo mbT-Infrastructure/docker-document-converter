@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+
+    docker-document-converter:
+        container_name: docker-document-converter
+        build: .
+        volumes:
+            - "./data-local:/media/docker-document-converter"
