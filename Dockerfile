@@ -1,6 +1,7 @@
 FROM madebytimo/base
 
-RUN apt update -qq && apt install -y -qq pandoc texlive-latex-recommended && \
+RUN apt update -qq && apt install -y -qq libreoffice-calc-nogui libreoffice-impress-nogui \
+        libreoffice-writer-nogui pandoc texlive-latex-recommended && \
     rm -rf /var/lib/apt/lists/*
 
 RUN mkdir --parents /media/converter/input && \

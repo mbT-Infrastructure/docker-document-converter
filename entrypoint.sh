@@ -14,12 +14,16 @@ else
 fi
 
 for DOCUMENT in "$@"; do
+    CONVERTED_DOCUMENT="/media/converter/output/$(basename "${DOCUMENT%.*}").pdf"
+    DOCUMENT="/media/converter/input/$DOCUMENT"
     if [[ "$CONVERSION_FORMAT" == pdf ]]; then
-        CONVERTED_DOCUMENT="/media/converter/output/$(basename "${DOCUMENT%.*}").pdf"
-        pandoc --output "$CONVERTED_DOCUMENT" "/media/converter/input/$DOCUMENT"
+        if [[ "$DOCUMENT" == *.@(doc|docx|dot|dotx|odp|ods|odt|otp|ots|ott|pot|potx|ppt|pptx|xls|xlt|xlsx|xltx) ]]; then
+            libreoffice --convert-to pdf "$DOCUMENT" --outdir "$(dirname "$CONVERTED_DOCUMENT")"
+        else
+            pandoc --output "$CONVERTED_DOCUMENT" "$DOCUMENT"
+        fi
     fi
     if [[ "$CONVERSION_FORMAT" == mediawiki ]]; then
-        CONVERTED_DOCUMENT="/media/converter/output/$(basename "${DOCUMENT%.*}").mediawiki"
         pandoc --to mediawiki --output "$CONVERTED_DOCUMENT" "/media/converter/input/$DOCUMENT"
     fi
 done
