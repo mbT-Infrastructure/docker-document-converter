@@ -3,7 +3,9 @@ version: "3.8"
 services:
 
     docker-document-converter:
-        container_name: docker-document-converter
+        container_name: document-converter
         build: .
+        command: powerpoint test.md
         volumes:
-            - "./data-local:/media/docker-document-converter"
+            - "./data-local:/media/converter/"
+            - "./Readme.md:/media/converter/input/test.md"

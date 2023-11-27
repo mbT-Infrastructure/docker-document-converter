@@ -12,7 +12,7 @@ The command has to be in the format
 ```
 FORMAT DOCUMENTS
 ```
-where `FORMAT` is pdf or mediawiki and `DOCUMENT` is a file in the input folder.
+where `FORMAT` is `mediawiki`, `pdf` or `presentation` and `DOCUMENT` is a file in the input folder.
 
 ## Volumes
 

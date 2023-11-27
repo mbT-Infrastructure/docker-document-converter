@@ -19,7 +19,8 @@ jobs:
                   cat | \
                       docker run --pull always --rm \
                           --volume "/media/saved-cache:/media/saved-cache" \
-                          --volume "docker-document-converter-build-cache:/media/build-cache" \
+                          --volume "docker-document-converter\
+                  -build-cache:\/media/build-cache" \
                           madebytimo/scripts \
                           bash \
                       << EOF
@@ -34,8 +35,9 @@ jobs:
             - name: Download script
               run: |
                 curl --silent --output /usr/local/bin/static-code-analysis.sh \
-                    https://gitlab.com/madebyTimo/scripts-development/-/raw/main/scripts/static-code-analysis.sh && \
-                    chmod +x /usr/local/bin/static-code-analysis.sh
+                    https://gitlab.com/madebyTimo/scripts-development/-/raw/main/scripts/\
+                static-code-analysis.sh \
+                    && chmod +x /usr/local/bin/static-code-analysis.sh
             - name: Analyze
               run: static-code-analysis.sh
               env:
@@ -48,7 +50,8 @@ jobs:
               run: |
                   docker run --pull always --rm \
                       --volume "/media/saved-cache:/media/saved-cache" \
-                      --volume "docker-document-converter-build-cache:/media/build-cache" \
+                      --volume "docker-document-converter\
+                  -build-cache:/media/build-cache" \
                       madebytimo/scripts \
                       compress.sh --fast --output /media/saved-cache/build-cache /media/build-cache
                   sudo chown -R "$(whoami)" /media/saved-cache
