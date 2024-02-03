@@ -13,24 +13,44 @@ else
     exec "$@"
 fi
 
+function convertToMediaWiki {
+    local DOCUMENT="$1"
+    local CONVERTED_DOCUMENT="${2}.mediawiki"
+    pandoc --to mediawiki --output "$CONVERTED_DOCUMENT" "$DOCUMENT"
+}
+
+function convertToPdf {
+    local DOCUMENT="$1"
+    local CONVERTED_DOCUMENT="${2}.pdf"
+    if [[ "$DOCUMENT" == *.@(doc|docx|dot|dotx|odp|ods|odt|otp|ots|ott|pot|potx|ppt|pptx|xls|\
+xlt|xlsx|xltx) ]]; then
+        libreoffice --convert-to pdf "$DOCUMENT" --outdir "$(dirname "$CONVERTED_DOCUMENT")"
+    else
+        local ADDITIONAL_ARGUMENTS=()
+        if [[ "$DOCUMENT" == *.@(md) ]]; then
+            ADDITIONAL_ARGUMENTS+=(--from commonmark)
+        fi
+        pandoc --output "$CONVERTED_DOCUMENT" --pdf-engine=xelatex \
+            --variable "geometry:margin=2cm" --variable "mainfont=DejaVu Sans" \
+            --variable "monofont=DejaVu Sans Mono"  "${ADDITIONAL_ARGUMENTS[@]}" \
+            "$DOCUMENT"
+    fi
+}
+
+function convertToPresentation {
+    local DOCUMENT="$1"
+    local CONVERTED_DOCUMENT="${2}.pptx"
+    pandoc --output "$CONVERTED_DOCUMENT" "$DOCUMENT"
+}
+
 for DOCUMENT in "$@"; do
-    CONVERTED_DOCUMENT="/media/converter/output/$(basename "${DOCUMENT%.*}")"
+    CONVERTED_DOCUMENT_WITHOUT_EXTENSION="/media/converter/output/$(basename "${DOCUMENT%.*}")"
     DOCUMENT="/media/converter/input/$DOCUMENT"
     if [[ "$CONVERSION_FORMAT" == pdf ]]; then
-        CONVERTED_DOCUMENT+=".pdf"
-        if [[ "$DOCUMENT" == *.@(doc|docx|dot|dotx|odp|ods|odt|otp|ots|ott|pot|potx|ppt|pptx|xls|xlt|xlsx|xltx) ]]; then
-            libreoffice --convert-to pdf "$DOCUMENT" --outdir "$(dirname "$CONVERTED_DOCUMENT")"
-        else
-            pandoc --output "$CONVERTED_DOCUMENT" --pdf-engine=xelatex \
-                --variable "geometry:margin=2cm" --variable "mainfont=DejaVu Sans" \
-                --variable "monofont=DejaVu Sans Mono" \
-                "$DOCUMENT"
-        fi
+        convertToPdf "$DOCUMENT" "$CONVERTED_DOCUMENT_WITHOUT_EXTENSION"
     elif [[ "$CONVERSION_FORMAT" == mediawiki ]]; then
-        CONVERTED_DOCUMENT+=".mediawiki"
-        pandoc --to mediawiki --output "$CONVERTED_DOCUMENT" "$DOCUMENT"
+        convertToMediaWiki "$DOCUMENT" "$CONVERTED_DOCUMENT_WITHOUT_EXTENSION"
     elif [[ "$CONVERSION_FORMAT" == presentation ]]; then
-        CONVERTED_DOCUMENT+=".pptx"
-        pandoc --output "$CONVERTED_DOCUMENT" "$DOCUMENT"
+        convertToPresentation "$DOCUMENT" "$CONVERTED_DOCUMENT_WITHOUT_EXTENSION"
     fi
 done

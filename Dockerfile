@@ -1,4 +1,4 @@
-FROM madebytimo/base
+FROM madebytimo/java-python
 
 RUN apt update -qq \
     && apt install -y -qq fonts-dejavu-extra libreoffice-calc-nogui \
