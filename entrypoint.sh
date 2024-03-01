@@ -28,7 +28,7 @@ xlt|xlsx|xltx) ]]; then
     else
         local ADDITIONAL_ARGUMENTS=()
         if [[ "$DOCUMENT" == *.@(md) ]]; then
-            ADDITIONAL_ARGUMENTS+=(--from commonmark+pipe_tables+superscript+subscript )
+            ADDITIONAL_ARGUMENTS+=(--from commonmark+footnotes+pipe_tables+superscript+subscript )
         fi
         pandoc --output "$CONVERTED_DOCUMENT" --pdf-engine=xelatex \
             --variable "geometry:margin=2cm" --variable "mainfont=DejaVu Sans" \
