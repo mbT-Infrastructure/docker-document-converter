@@ -16,7 +16,9 @@ fi
 function convertToMediaWiki {
     local DOCUMENT="$1"
     local CONVERTED_DOCUMENT="${2}.mediawiki"
-    pandoc --to mediawiki --output "$CONVERTED_DOCUMENT" "$DOCUMENT"
+    pandoc --to mediawiki "$DOCUMENT" \
+        | sed --in-place 's/^\({|\)$/\1 class="wikitable sortable filterable"/' \
+        > "$CONVERTED_DOCUMENT"
 }
 
 function convertToPdf {
